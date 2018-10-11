@@ -9,7 +9,7 @@ class Alice(User):
         # 1: Alice sends IDa IDb and a nonce to the kdc
         nonce = self.request_session_key()
         
-        # 4: diffie helman with kdc
+        # 4: diffie hellman with kdc
         self.diffie_hellman_response()
         
         # 8: decrypt to extract session key and message to send to Bob

@@ -29,7 +29,7 @@ class KDC:
         p, b = self.request_diffie_hellman(bob_id)
         self.diffie_hellman_response(bob_id, p, b)
         
-        # 7: compute and encrypt the session key and send to Alice
+        # 7: generate and encrypt the session key and send to Alice
         self.send_encrypted_session_key(alice_id, bob_id, nonce)
     
     @wait_for_message
