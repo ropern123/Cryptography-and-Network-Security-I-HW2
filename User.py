@@ -7,9 +7,9 @@ from hashlib import sha512
 
 
 class User:
-    def __init__(self, id, kds_connection, other_user_connection, other_user_id):
+    def __init__(self, id, kdc_connection, other_user_connection, other_user_id):
         self.id = int(id)
-        self.kds_connection = Connection(kds_connection)
+        self.kdc_connection = Connection(kdc_connection)
         self.other_user_connection = Connection(other_user_connection)
         self.other_user_id = other_user_id
         self._key = random.randint(1, (1 << 10) - 1) # generate a random 10 bit key for DES
@@ -21,7 +21,7 @@ class User:
     # encrypted with the shared secret
     @wait_for_message
     def diffie_hellman_response(self):
-        message = self.kds_connection.get_message()
+        message = self.kdc_connection.get_message()
         if message != '':
             p = stoo(message[:512])
             g = stoo(message[512:1024])
@@ -32,7 +32,7 @@ class User:
             s %= (1 << 10) # only need last 10 bits for DES encrypt
             encrypted_key = encrypt(self._key, s)
             message = otos(A, 512) + otos(encrypted_key, 2)
-            self.kds_connection.send_message(message)
+            self.kdc_connection.send_message(message)
             return True
     
     # use SHA-512 as a confirmation hash function

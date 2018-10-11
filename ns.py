@@ -1,7 +1,7 @@
 from threading import Thread
 from Alice import Alice
 from Bob import Bob
-from KDS import KDS
+from KDC import KDC
 
 
 
@@ -11,29 +11,29 @@ if __name__ == '__main__':
     bob_id   = 1006360536646
     
     # create names for connections
-    alice_kds_connection = 'connection_alice_kds'
-    bob_kds_connection   = 'connection_bob_kds'
+    alice_kdc_connection = 'connection_alice_kdc'
+    bob_kdc_connection   = 'connection_bob_kdc'
     alice_bob_connection = 'connection_alice_bob'
     
 
     # create participants
-    alice = Alice(alice_id, alice_kds_connection, alice_bob_connection, bob_id)
-    bob = Bob(bob_id, bob_kds_connection, alice_bob_connection, alice_id)
-    kds = KDS(alice_kds_connection, bob_kds_connection)
+    alice = Alice(alice_id, alice_kdc_connection, alice_bob_connection, bob_id)
+    bob = Bob(bob_id, bob_kdc_connection, alice_bob_connection, alice_id)
+    kdc = KDC(alice_kdc_connection, bob_kdc_connection)
     
     
     # create threads to simulate communication between machines
     alice_thread = Thread(target=alice.start)
     bob_thread = Thread(target=bob.start)
-    kds_thread = Thread(target=kds.start)
+    kdc_thread = Thread(target=kdc.start)
     
     # start each of the threads
     alice_thread.start()
     bob_thread.start()
-    kds_thread.start()
+    kdc_thread.start()
     
     # join each of the threads
-    kds_thread.join() 
+    kdc_thread.join()
     alice_thread.join()
     bob_thread.join()
     

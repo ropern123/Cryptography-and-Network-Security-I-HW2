@@ -6,14 +6,14 @@ from des import encrypt, decrypt
 class Alice(User):
     def start(self):
         self.name = 'alice'
-        # 1: Alice sends IDa IDb and a nonce to the kds
+        # 1: Alice sends IDa IDb and a nonce to the kdc
         nonce = self.request_session_key()
         
-        # 4: diffie helman with kds
+        # 4: diffie helman with kdc
         self.diffie_hellman_response()
         
         # 8: decrypt to extract session key and message to send to Bob
-        session_key = self.receive_key_from_kds(nonce)
+        session_key = self.receive_key_from_kdc(nonce)
         if session_key is False:
             return
         
@@ -27,12 +27,12 @@ class Alice(User):
     def request_session_key(self):
         nonce = otos(generate_rand(5), 5)
         message = otos(self.id) + otos(self.other_user_id) + nonce
-        self.kds_connection.send_message(message)
+        self.kdc_connection.send_message(message)
         return nonce
     
     @wait_for_message
-    def receive_key_from_kds(self, nonce):
-        message = self.kds_connection.get_message()
+    def receive_key_from_kdc(self, nonce):
+        message = self.kdc_connection.get_message()
         if message != '':
             # decrypt the message
             decrypted_message = otos(decrypt(stoo(message), self._key, 76), 76)
@@ -44,7 +44,7 @@ class Alice(User):
             received_nonce = decrypted_message[33:38]
             encrypted_b_message = decrypted_message[38:]
             
-            # quit if the message from the kds is not right
+            # quit if the message from the kdc is not right
             if timestamp in self.timestamps or bob_id != self.other_user_id or nonce != received_nonce:
                 return False
             
