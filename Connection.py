@@ -41,6 +41,7 @@ class Connection:
             self.loc = len(contents)
         return contents[old_loc:]
     
+    # https://stackoverflow.com/a/37515805
     def is_open(self):
         if os.path.exists(self.filename):
             try:
